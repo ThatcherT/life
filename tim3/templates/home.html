@@ -1,0 +1,11 @@
+<a href="{% url 'create' %}">Create</a><br>
+{% for e in events %}
+    <p style="color: {{ e.css_color }};">
+        {{ e.human_color }}
+    </p>
+    Title: {{ e.title }}
+    Start: {{ e.start_time }}<
+    End: {{ e.end_time }}
+    <br>
+    
+{% endfor %}

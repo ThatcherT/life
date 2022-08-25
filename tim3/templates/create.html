@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create</title>
+    </head>
+<body>
+    <h1>Create</h1>
+
+{{ success }}
+<a href="{% url 'home' %}">Home</a>
+<form method="POST">
+    {% csrf_token %}
+    <div id="name">
+        <input type="text" name="title" placeholder="Name" required>
+    </div>
+    <h1>Type</h1>
+    <!-- dropdown with 3 items, project, task, maintenance -->
+    <select name="type" id="eventType">
+        <option value="task" selected>Task</option>
+        <option value="maintenance">Maintenance</option>
+    </select>
+    <div id="task">
+        <h1>Task</h1>
+    </div>
+    <div id="maintenance" style="display: none;">
+        <h1>Maintenance</h1>
+    </div>
+    <div id="days">
+        Days
+        {% comment %} Checkbox for each weekday {% endcomment %}
+        <input type="checkbox" name="monday" value="0" checked> Monday
+        <input type="checkbox" name="tuesday" value="1" checked> Tuesday
+        <input type="checkbox" name="wednesday" value="2" checked> Wednesday
+        <input type="checkbox" name="thursday" value="3" checked> Thursday
+        <input type="checkbox" name="friday" value="4" checked> Friday
+        <input type="checkbox" name="saturday" value="5"> Saturday
+        <input type="checkbox" name="sunday" value="6"> Sunday
+    </div>
+    <div id="hours">
+        Hours
+        <input type="time" name="withinStart" placholder="Start" value="08:00" required>
+        <input type="time" name="withinEnd" placholder="End" value="17:00" required>
+    </div>
+    <div id="total-time">
+        Total Time
+        <input type="number" id="totalTime" placeholder="Total Time" required>
+    </div>
+    <div id="session">
+        Session Duration
+        <input type="number" id="sessionTime" placeholder="Session Time" required>
+        # of Sessions
+        <input type="number" id="sessionCount" placeholder="Session Count" required>
+    </div>
+    <div id="deadline">
+        Deadline
+        <input type="date" name="byDate" placeholder="By Date" min={{today}} required>
+    </div>
+    <div id="submit">
+        <input type="submit" value="Add">
+    </div>
+</form>
+<script>
+    // event listen for input with name totalTime
+    document.getElementById("total-time").addEventListener("change", function(event) {
+        const sessionTime = document.getElementById("sessionTime")
+        sessionTime.value = 20;
+        sessionTime.dispatchEvent(new Event("change")); // this event adjusts the # of sessions
+    });
+    // event listen for input with name sessionTime
+    document.getElementById("sessionTime").addEventListener("change", function(event) {
+        document.getElementById("sessionCount").value = Math.floor(document.getElementById("totalTime").value / document.getElementById("sessionTime").value);
+    });
+    document.getElementById("sessionCount").addEventListener("change", function(event) {
+        document.getElementById("sessionTime").value = Math.floor(document.getElementById("totalTime").value / document.getElementById("sessionCount").value);
+    });
+
+</script>
+<script>
+    // There is a select el that classifies what type of event it is
+    // based on the value of the dropdown, change what is shown on the page
+    const eventType = document.getElementById('eventType');
+    eventType.addEventListener('change', function () {
+        document.getElementById('task').style.display = 'none';
+        document.getElementById('maintenance').style.display = 'none';
+        if (eventType.value == 'task') {
+            document.getElementById('task').style.display = 'block';
+        } else if (eventType.value == 'maintenance') {
+            document.getElementById('maintenance').style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
